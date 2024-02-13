@@ -1,25 +1,44 @@
-import { Component } from "react";
-import "./style.css";
-import Question from "./Question";
-import preguntas from "./preguntas";
+import React, { Component } from "react";
 
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      allTask: [],
+      newTask: "",
+    };
   }
 
+  handleChange = (e) => {
+    this.setState({ newTask: e.target.value });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.setState((prevState) => ({
+      allTask: [...prevState.allTask, this.state.newTask],
+      newTask: "",
+    }));
+  };
+
   render() {
+    const { allTask } = this.state;
+
     return (
       <div>
-        {preguntas.map((item, index) => (
-          <Question
-            key={index}
-            pregunta={item.pregunta}
-            opciones={item.opciones}
-          />
-        ))}
-        <button className="btn-verificar"> verificar con optimus </button>
+        {/* Ingreso de tareas  */}
+        <form onSubmit={this.handleSubmit}>
+          <input type="text" placeholder="into your task" onChange={this.handleChange} value={this.state.newTask}/>
+          <button> add task </button>
+        </form>
+
+        {/* lista de tareas */}
+        <h2> tus tareas para hoy</h2>
+        <ul>
+          {allTask.map((item, index) => (
+            <li key={index}> {item} </li>
+          ))}
+        </ul>
       </div>
     );
   }
